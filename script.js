@@ -1,0 +1,48 @@
+
+const apiKey = '105067465fe24010bf2174436241409'; // Replace with your actual API key
+
+document.getElementById('get-weather').addEventListener('click', getWeather);
+
+// Add event listener for the Enter key in the search bar
+document.getElementById('city-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission if it's in a form
+        getWeather();
+    }
+});
+
+async function getWeather() {
+    const cityInput = document.getElementById('city-input').value;
+    const weatherInfo = document.getElementById('weather-info');
+    
+    if (!cityInput) {
+        alert('Please enter a city name');
+        return;
+    }
+
+    weatherInfo.textContent = 'Loading...';
+    weatherInfo.classList.remove('show');
+
+    try {
+        const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(cityInput)}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        weatherInfo.innerHTML = `
+            <h2>${data.location.name}, ${data.location.country}</h2>
+            <p><strong>${data.current.temp_c}°C</strong> / ${data.current.temp_f}°F</p>
+            <p>${data.current.condition.text}</p>
+            <p>Humidity: ${data.current.humidity}%</p>
+            <p>Wind: ${data.current.wind_kph} km/h, ${data.current.wind_dir}</p>
+        `;
+        weatherInfo.classList.add('show');
+    } catch (error) {
+        console.error('Error:', error);
+        weatherInfo.textContent = 'Error fetching weather data. Please try again.';
+        weatherInfo.classList.add('show');
+    }
+}
