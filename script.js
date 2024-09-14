@@ -1,3 +1,6 @@
+
+const apiKey = '105067465fe24010bf2174436241409'; 
+
 document.getElementById('get-weather').addEventListener('click', getWeather);
 
 document.getElementById('city-input').addEventListener('keypress', function(event) {
@@ -20,8 +23,7 @@ async function getWeather() {
     weatherInfo.classList.remove('show');
 
     try {
-        // Call the Netlify function instead of directly calling WeatherAPI
-        const response = await fetch(`/.netlify/functions/getWeather?city=${encodeURIComponent(cityInput)}`);
+        const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(cityInput)}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
