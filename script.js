@@ -1,12 +1,8 @@
-
-const apiKey = '105067465fe24010bf2174436241409'; // Replace with your actual API key
-
 document.getElementById('get-weather').addEventListener('click', getWeather);
 
-// Add event listener for the Enter key in the search bar
 document.getElementById('city-input').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission if it's in a form
+        event.preventDefault(); 
         getWeather();
     }
 });
@@ -24,7 +20,8 @@ async function getWeather() {
     weatherInfo.classList.remove('show');
 
     try {
-        const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(cityInput)}`);
+        // Call the Netlify function instead of directly calling WeatherAPI
+        const response = await fetch(`/.netlify/functions/getWeather?city=${encodeURIComponent(cityInput)}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
